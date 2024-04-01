@@ -1,28 +1,51 @@
-import { useState, ChangeEvent } from "react"
+import { useState, ChangeEvent, FormEvent, Dispatch } from "react"
 import { categories } from "../data/categories"
-8
-export const Form = () => {
+import { Activity } from '../types/index';
+import { ActivityActions } from "../reducers/activityReducer";
 
-  const [activity, setActivity] = useState({
+
+type FormProps = {
+  dispatch: Dispatch<ActivityActions>
+}
+
+
+export const Form = ({dispatch} : FormProps) => {
+
+  const [activity, setActivity] = useState<Activity>({
     category: 1,
     name: '',
     calories: 0,
   })
   HTMLInputElement
   const handleChange = (e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
+
+    const isNumberField = ['category', 'calories'].includes(e.target.id)
 
     setActivity({
       ...activity, // Copia del state
-      [e.target.id]: e.target.value  
+      [e.target.id]: isNumberField ? +e.target.value : e.target.value  // +e.target.value convertir Number
     })
     
+  }
+
+  const isValidActivity = () =>{
+    const { name, calories} = activity
+    return name.trim() !== '' && calories > 0
+
+  }
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    
+    dispatch({ type: 'save-activity', payload: { newActivity: activity} })
+
   }
 
 
   return (
     <form
       className="space-y-6 bg-gray-100 shadow p-10 rounded-lg"
+      onSubmit={handleSubmit}
     >
       <div className="grid grid-cols-1 gap-3">
         
@@ -74,7 +97,8 @@ export const Form = () => {
         <input 
           type="submit"
           value='Guardar Comida'
-          className="bg-blue-500 rounded-md p-2 text-white uppercase font-bold cursor-pointer hover:bg-blue-600"
+          className="disabled:opacity-20 disabled:cursor-not-allowed bg-blue-500 rounded-md p-2 text-white uppercase font-bold cursor-pointer hover:bg-blue-600"
+          disabled={!isValidActivity()}
         />
 
 
@@ -83,3 +107,4 @@ export const Form = () => {
     </form>
   )
 }
+
