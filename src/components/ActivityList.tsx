@@ -1,13 +1,16 @@
-import { useMemo } from "react"
+import { useMemo, Dispatch } from "react"
 import { Activity } from "../types"
 import { categories } from "../data/categories"
+import { PencilSquareIcon } from '@heroicons/react/24/outline'
+import { ActivityActions } from "../reducers/activityReducer"
 
 
 type ActivityListProps = {
-    activities: Activity[]
+    activities: Activity[],
+    dispatch: Dispatch<ActivityActions>
 }
 
-export const ActivityList = ({activities} : ActivityListProps) => {
+export const ActivityList = ({activities, dispatch} : ActivityListProps) => {
 
     const categoryName = useMemo(() => 
         (category: Activity['category']) => categories.map( cat => cat.id === category ? cat.name : '' ),
@@ -37,8 +40,14 @@ export const ActivityList = ({activities} : ActivityListProps) => {
                         <span>Calorías</span>
                     </p>
                 </div>
-                <div className="">
-
+                <div className="flex gap-5 item-center">
+                    <button
+                        onClick={() => dispatch({type: 'set-activeId', payload: {id: activity.id}})}
+                    >
+                        <PencilSquareIcon 
+                            className='h-8 w-8 text-pink-500 '
+                        />
+                    </button>
                 </div>
             </div>
         ))}
