@@ -31,7 +31,7 @@ export const ActivityList = ({activities, dispatch} : ActivityListProps) => {
                     <div className="space-y-2 relative">
                         {/* Categoria */}
                         <p className={`absolute -top-8 -left-8 px-10 py-2 rounded-md text-white uppercase font-bold 
-                            ${activity.category === 1 ? 'bg-emerald-500' : 'bg-orange-500'}`}
+                            ${activity.category === 1 ? 'bg-emerald-500' : 'bg-violet-600'}`}
                         >{categoryName(activity.category)}</p>
                         {/* Actividad */}
                         <p className="text-2xl text-white font-bold pt-3">{activity.name}</p>
