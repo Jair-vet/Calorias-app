@@ -2,8 +2,9 @@ import { Activity } from "../types"
 
 // Acciones
 export type ActivityActions = 
-    { type: 'save-activity',payload: { newActivity : Activity }} | 
-    { type: 'set-activeId',payload: { id : Activity['id'] }} 
+    { type: 'save-activity',payload: { newActivity : Activity }}    | 
+    { type: 'set-activeId',payload: { id : Activity['id'] }}        |    
+    { type: 'delete-activity',payload: { id : Activity['id'] }}            
 
 
 export type ActiviyState = {
@@ -22,11 +23,12 @@ export const activityReducer = (
     action: ActivityActions
     ) =>{
         
+        // Guardar actividad
         if(action.type === 'save-activity'){
             // Maneja la logica para actualizar el state
 
             let updatedActivities : Activity[] = []
-            if(state.activeId){
+            if(state.activeId){  // Editar
                 updatedActivities = state.activities.map( activity => activity.id === state.activeId 
                     ? action.payload.newActivity 
                     : activity 
@@ -41,6 +43,7 @@ export const activityReducer = (
                 activeId: ''
             }
         }
+        // Actualizar actividad
         if(action.type === 'set-activeId'){
             // Maneja la logica para actualizar el state
             return {
@@ -48,6 +51,16 @@ export const activityReducer = (
                 activeId: action.payload.id
             }
         }
+
+        // Eliminar actividad
+        if(action.type === 'delete-activity'){
+            return {
+                ...state,
+                activities: state.activities.filter( activity => activity.id !== action.payload.id)
+            }
+        }
+
+
 
     return state
 }
